@@ -165,6 +165,7 @@ public class ModuleIOTalon implements ModuleIO {
             syncQueued = false;
         }
 
+        //angle in radians of the modules
         double desiredAngle = state.angle.getRadians();
 
         m_angleVoltage = m_angleFeedbackController.calculate(anglePositionRad, desiredAngle);
@@ -176,6 +177,8 @@ public class ModuleIOTalon implements ModuleIO {
         else if (deltaTheta > Math.PI) {
             deltaTheta = Math.PI * 2 - deltaTheta;
         }
+
+        //velocity of the modules
         Logger.recordOutput("SwerveDrive/deltaTheta", deltaTheta);
         double velocityRadSec = (deltaTheta) / (Timer.getFPGATimestamp() - prevTime);
         Logger.recordOutput("SwerveDrive/velocityRadSec", velocityRadSec);

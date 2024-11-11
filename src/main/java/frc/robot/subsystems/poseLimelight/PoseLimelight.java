@@ -46,6 +46,7 @@ public class PoseLimelight extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("PoseLimelight", inputs);
 
+        //timestamp for april tag data
         for (int i = 0; i < 14; i++) {
             // tx, ty, isSeen (1 or 0), timestamp seconds
             tagQueue[i].add(new Double[] {
@@ -63,17 +64,20 @@ public class PoseLimelight extends SubsystemBase {
         // Logger.recordOutput("PoseLimelight/estRobotPose", getEstimatedRobotPose());
     }
 
+    //velocity of the vector to the primary target
     public double getPrimaryIDMovment() {
         Queue<Double[]> queue = tagQueue[inputs.primaryTagId];
         List<Double[]> list = new ArrayList<Double[]>(queue);
+        double primaryIDMovement = 0;
         double lastTime = 0; 
         
         for (int i = list.size() - 1; i >= 0; i--) {
             double dt = list.get(list.size() - 1)[3].doubleValue() - list.get(i)[3].doubleValue();
             if (list.get(i)[2].doubleValue() == 1 && dt <= 0.2) {
-                return Math.hypot(, i) / list.get(i)
+                primaryIDMovement = Math.hypot(dt, i) / list.get(i)[3].doubleValue(); //TODO: check if this is correct edan :3
             }
         }
+        return primaryIDMovement;
     }
 
     public boolean hasValidTargets() {
